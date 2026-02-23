@@ -1,0 +1,154 @@
+//*****************************************************************************
+// COMSC-210 | Lab 13 | Gabriel Marquez
+// Description: this program exercises a variety of std::vector functions by
+// tracking 10 kilometer run times over a span of 35 days. Modified version of
+// Lab 12 code such that it uses the STD::vector rather than the STD::array.
+//*****************************************************************************
+
+#include <iostream>
+#include <algorithm>  // for sort(), find()
+#include <numeric>    // for accumulate()
+#include <array>
+#include <fstream>
+using namespace std;
+
+const int SIZE = 35;
+const int DAYS = 7;
+const int WEEKS = 5;
+
+void displayTimes(const array<double, SIZE> &);
+void displayTimes(const array<array<double, DAYS>, WEEKS> &);
+void findTime(array<double, SIZE> &, double);
+void populateArray(array<double, DAYS> &, const array<double, SIZE> &);
+
+int main() {
+    //declare std::array of size SIZE via reading data from a file,
+    //using .size() to loop through the array and .at(i) to
+    // populate each element and confirming with .empty()
+    cout << "Populating runTimes array..." << endl;
+    array<double, SIZE> runTimes;
+    ifstream fin("run_times.txt");
+    if (fin.good()) {
+        for (int i = 0; i < runTimes.size(); ++i)
+            fin >> runTimes.at(i);
+        fin.close();
+    }
+    else {
+        cout << "ERROR! Please verify file name/directory and restart program.";
+        return 1;
+    }
+    if (!runTimes.empty())
+        cout << "Complete!" << endl;
+
+    //display elements in runTimes with a function
+    cout << "10 kilometer run times (in minutes) from the past 35 days:" << endl;
+    displayTimes(runTimes);
+
+    //using a 2D array to group times by week
+    //creating arrays for each week first
+    array<double, DAYS> week1;
+    populateArray(week1, runTimes);
+    array<double, DAYS> week2;
+    populateArray(week2, runTimes);
+    array<double, DAYS> week3;
+    populateArray(week3, runTimes);
+    array<double, DAYS> week4;
+    populateArray(week4, runTimes);
+    array<double, DAYS> week5;
+    populateArray(week5, runTimes);
+
+    //create and populate 2D array using week arrays
+    array<array<double, DAYS>, WEEKS> weeklyRunTimes = {week1, week2, week3,
+                                                        week4, week5};
+    displayTimes(weeklyRunTimes);
+
+    //accessing individual run times with .front(), .back(), and .at()
+    cout << "Oldest run time: " <<  runTimes.front() << " minutes" << endl;
+    cout << "Most recent run time: " << runTimes.back() << " minutes" << endl;
+    cout << "Run time on day #10: " << runTimes.at(9) << " minutes" << endl << endl;
+
+    //using iterators to sort and reverse runTimes
+    sort(runTimes.begin(), runTimes.end());
+    cout << "Run times sorted from fastest to slowest:" << endl;
+    displayTimes(runTimes);
+    sort(runTimes.rbegin(), runTimes.rend());
+    cout << "Run times sorted from slowest to fastest:" << endl;
+    displayTimes(runTimes);
+
+    //using an iterator in a function to find a specific run time
+    double time1 = 100.34;
+    findTime(runTimes, time1);
+    double time2 = 64.55;
+    findTime(runTimes, time2);
+
+    //finding the slowest, fastest, and sum of all run times
+    cout << "Slowest run time: "
+         << *max_element(runTimes.begin(), runTimes.end()) << " minutes" << endl; 
+    cout << "Fastest run time: "
+         << *min_element(runTimes.begin(), runTimes.end()) << " minutes" << endl;
+    cout << "Total minutes run over the last " << runTimes.size() << " days: ";
+    cout << accumulate(runTimes.begin(), runTimes.end(), 0) << " minutes" << endl;
+    cout << endl;
+
+    cout << "Summary complete.";
+    return 0;
+}
+
+// displayTimes() takes an std::array of size SIZE by constant reference and
+// outputs its members to the console, formatted with a comma separator.
+// arguments: an std::array
+// returns: n/a
+void displayTimes(const array<double, SIZE> &arr) {
+    for (int i = 0; i < arr.size(); ++i) {
+        cout << arr[i];
+        if (i < arr.size() - 1)
+            cout << ", ";
+    }
+    cout << endl << endl;
+}
+
+// displayTimes() takes a 2D std::array by constant reference and
+// outputs its members to the console.
+// arguments: a 2D std::array
+// returns: n/a
+void displayTimes(const array<array<double, DAYS>, WEEKS> &arr) {
+    cout << "Weekly view of run times:" << endl;
+    for (int i = 0; i < arr.size(); ++i) {
+        cout << "Week " << i+1 << ": ";
+        for (int j = 0; j < arr[i].size(); ++j) 
+            cout << arr[i][j] << " ";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+// findTime() takes an std::array of size SIZE by reference and outputs the
+// target's index if found and a "not found" message if not
+// note: cannot pass std::array by constant reference here
+// arguments: an std::array, a target time of type double
+// returns: n/a
+void findTime(array<double, SIZE> &arr, double target) {
+    array<double, SIZE>::iterator it; //iterator to point to found element
+    cout << "Searching for time: " << target << " minutes..." << endl;
+    it = find(arr.begin(), arr.end(), target);
+    cout << target;
+    if (it != arr.end())
+        cout << " found in position " << it - arr.begin() << endl;
+    else
+        cout << " was not found.\n";
+    cout << endl;
+}
+
+// populateArray() takes an std::array of size DAYS by reference and
+// populates its members using elemens from a second std::array of
+// size SIZE passed by constant reference.
+// arguments: an std::array passed by reference, an std::array passed by
+// constant reference
+// returns: n/a
+void populateArray(array<double, DAYS> &to, const array<double, SIZE> &from) {
+    static int index = 0; //so that index doesn't reset after each function call
+    for (int i = 0; i < to.size(); ++i) {
+        to.at(i) = from.at(index);
+        index++;
+    }
+}
