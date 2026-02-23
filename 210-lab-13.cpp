@@ -22,16 +22,19 @@ void findTime(vector<double> &, double);
 void populateVector(vector<double> &, const vector<double> &);
 
 int main() {
-    //declare empty std::vector 
+    //declare std::vector of size SIZE
     //via reading data from a file, use .size() to
     //loop through the vector and .at(i) to
     //populate each element and confirming with .empty()
     cout << "Populating runTimes vector..." << endl;
-    vector<double> runTimes;
+    vector<double> runTimes(SIZE);
     ifstream fin("run_times.txt");
     if (fin.good()) {
-        for (int i = 0; i < runTimes.size(); ++i)
-            fin >> runTimes.at(i);
+        for (int i = 0; i < runTimes.size(); ++i) {
+            double temp;
+            fin >> temp;
+            runTimes.push_back(temp);
+        }
         fin.close();
     }
     else {
@@ -47,15 +50,15 @@ int main() {
 
     //using a 2D vector to group times by week
     //creating arrays for each week first
-    vector<double> week1;
+    vector<double> week1(DAYS);
     populateVector(week1, runTimes);
-    vector<double> week2;
-    populateVecor(week2, runTimes);
-    vector<double> week3;
+    vector<double> week2(DAYS);
+    populateVector(week2, runTimes);
+    vector<double> week3(DAYS);
     populateVector(week3, runTimes);
-    vector<double> week4;
+    vector<double> week4(DAYS);
     populateVector(week4, runTimes);
-    vector<double> week5;
+    vector<double> week5(DAYS);
     populateVector(week5, runTimes);
 
     //create and populate 2D array using week arrays
