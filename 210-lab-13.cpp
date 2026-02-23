@@ -8,7 +8,7 @@
 #include <iostream>
 #include <algorithm>  // for sort(), find()
 #include <numeric>    // for accumulate()
-#include <array>
+#include <vector>
 #include <fstream>
 using namespace std;
 
@@ -16,17 +16,17 @@ const int SIZE = 35;
 const int DAYS = 7;
 const int WEEKS = 5;
 
-void displayTimes(const array<double, SIZE> &);
-void displayTimes(const array<array<double, DAYS>, WEEKS> &);
-void findTime(array<double, SIZE> &, double);
-void populateArray(array<double, DAYS> &, const array<double, SIZE> &);
+void displayTimes(const vector<double> &);
+void displayTimes(const vector<vector<double>> &);
+void findTime(vector<double> &, double);
+void populateVector(vector<double> &, const vector<double> &);
 
 int main() {
-    //declare std::array of size SIZE via reading data from a file,
-    //using .size() to loop through the array and .at(i) to
+    //declare empty std::vector of size SIZE via reading data from
+    // a file, using .size() to loop through the vector and .at(i) to
     // populate each element and confirming with .empty()
-    cout << "Populating runTimes array..." << endl;
-    array<double, SIZE> runTimes;
+    cout << "Populating runTimes vector..." << endl;
+    vector<double> runTimes;
     ifstream fin("run_times.txt");
     if (fin.good()) {
         for (int i = 0; i < runTimes.size(); ++i)
@@ -44,7 +44,7 @@ int main() {
     cout << "10 kilometer run times (in minutes) from the past 35 days:" << endl;
     displayTimes(runTimes);
 
-    //using a 2D array to group times by week
+    //using a 2D vector to group times by week
     //creating arrays for each week first
     array<double, DAYS> week1;
     populateArray(week1, runTimes);
@@ -94,46 +94,46 @@ int main() {
     return 0;
 }
 
-// displayTimes() takes an std::array of size SIZE by constant reference and
+// displayTimes() takes an std::vector by constant reference and
 // outputs its members to the console, formatted with a comma separator.
-// arguments: an std::array
+// arguments: an std::vector
 // returns: n/a
-void displayTimes(const array<double, SIZE> &arr) {
-    for (int i = 0; i < arr.size(); ++i) {
-        cout << arr[i];
-        if (i < arr.size() - 1)
+void displayTimes(const vector<double> &vec) {
+    for (int i = 0; i < vec.size(); ++i) {
+        cout << vec[i];
+        if (i < vec.size() - 1)
             cout << ", ";
     }
     cout << endl << endl;
 }
 
-// displayTimes() takes a 2D std::array by constant reference and
+// displayTimes() takes a 2D std::vector by constant reference and
 // outputs its members to the console.
-// arguments: a 2D std::array
+// arguments: a 2D std::vector
 // returns: n/a
-void displayTimes(const array<array<double, DAYS>, WEEKS> &arr) {
+void displayTimes(const vector<vector<double>> &vec) {
     cout << "Weekly view of run times:" << endl;
-    for (int i = 0; i < arr.size(); ++i) {
+    for (int i = 0; i < vec.size(); ++i) {
         cout << "Week " << i+1 << ": ";
-        for (int j = 0; j < arr[i].size(); ++j) 
-            cout << arr[i][j] << " ";
+        for (int j = 0; j < vec[i].size(); ++j) 
+            cout << vec[i][j] << " ";
         cout << endl;
     }
     cout << endl;
 }
 
-// findTime() takes an std::array of size SIZE by reference and outputs the
+// findTime() takes an std::vector by reference and outputs the
 // target's index if found and a "not found" message if not
-// note: cannot pass std::array by constant reference here
-// arguments: an std::array, a target time of type double
+// note: cannot pass std::vector by constant reference here
+// arguments: an std::vector, a target time of type double
 // returns: n/a
-void findTime(array<double, SIZE> &arr, double target) {
-    array<double, SIZE>::iterator it; //iterator to point to found element
+void findTime(vector<double> &vec, double target) {
+    vector<double>::iterator it; //iterator to point to found element
     cout << "Searching for time: " << target << " minutes..." << endl;
-    it = find(arr.begin(), arr.end(), target);
+    it = find(vec.begin(), vec.end(), target);
     cout << target;
-    if (it != arr.end())
-        cout << " found in position " << it - arr.begin() << endl;
+    if (it != vec.end())
+        cout << " found in position " << it - vec.begin() << endl;
     else
         cout << " was not found.\n";
     cout << endl;
