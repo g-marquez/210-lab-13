@@ -31,9 +31,7 @@ int main() {
     ifstream fin("run_times.txt");
     if (fin.good()) {
         for (int i = 0; i < runTimes.size(); ++i) {
-            double temp;
-            fin >> temp;
-            runTimes.push_back(temp);
+            fin >> runTimes.at(i);
         }
         fin.close();
     }
@@ -91,7 +89,7 @@ int main() {
     cout << "Fastest run time: "
          << *min_element(runTimes.begin(), runTimes.end()) << " minutes" << endl;
     cout << "Total minutes run over the last " << runTimes.size() << " days: ";
-    cout << accumulate(runTimes.begin(), runTimes.end(), 0) << " minutes" << endl;
+    cout << accumulate(runTimes.begin(), runTimes.end(), 0.0) << " minutes" << endl;
     cout << endl;
 
     cout << "Summary complete.";
@@ -148,7 +146,7 @@ void findTime(vector<double> &vec, double target) {
 // arguments: an std::vector passed by reference, an std::vector passed by
 // constant reference
 // returns: n/a
-void populateVecor(vector<double> &to, const vector<double> &from) {
+void populateVector(vector<double> &to, const vector<double> &from) {
     static int index = 0; //so that index doesn't reset after each function call
     for (int i = 0; i < to.size(); ++i) {
         to.at(i) = from.at(index);
