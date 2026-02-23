@@ -14,7 +14,6 @@ using namespace std;
 
 const int SIZE = 35;
 const int DAYS = 7;
-const int WEEKS = 5;
 
 void displayTimes(const vector<double> &);
 void displayTimes(const vector<vector<double>> &);
