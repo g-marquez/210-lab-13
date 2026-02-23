@@ -22,9 +22,10 @@ void findTime(vector<double> &, double);
 void populateVector(vector<double> &, const vector<double> &);
 
 int main() {
-    //declare empty std::vector of size SIZE via reading data from
-    // a file, using .size() to loop through the vector and .at(i) to
-    // populate each element and confirming with .empty()
+    //declare empty std::vector 
+    //via reading data from a file, use .size() to
+    //loop through the vector and .at(i) to
+    //populate each element and confirming with .empty()
     cout << "Populating runTimes vector..." << endl;
     vector<double> runTimes;
     ifstream fin("run_times.txt");
@@ -46,20 +47,20 @@ int main() {
 
     //using a 2D vector to group times by week
     //creating arrays for each week first
-    array<double, DAYS> week1;
-    populateArray(week1, runTimes);
-    array<double, DAYS> week2;
-    populateArray(week2, runTimes);
-    array<double, DAYS> week3;
-    populateArray(week3, runTimes);
-    array<double, DAYS> week4;
-    populateArray(week4, runTimes);
-    array<double, DAYS> week5;
-    populateArray(week5, runTimes);
+    vector<double> week1;
+    populateVector(week1, runTimes);
+    vector<double> week2;
+    populateVecor(week2, runTimes);
+    vector<double> week3;
+    populateVector(week3, runTimes);
+    vector<double> week4;
+    populateVector(week4, runTimes);
+    vector<double> week5;
+    populateVector(week5, runTimes);
 
     //create and populate 2D array using week arrays
-    array<array<double, DAYS>, WEEKS> weeklyRunTimes = {week1, week2, week3,
-                                                        week4, week5};
+    vector<vector<double>> weeklyRunTimes = {week1, week2, week3,
+                                             week4, week5};
     displayTimes(weeklyRunTimes);
 
     //accessing individual run times with .front(), .back(), and .at()
@@ -139,13 +140,12 @@ void findTime(vector<double> &vec, double target) {
     cout << endl;
 }
 
-// populateArray() takes an std::array of size DAYS by reference and
-// populates its members using elemens from a second std::array of
-// size SIZE passed by constant reference.
-// arguments: an std::array passed by reference, an std::array passed by
+// populateVector() takes an std::vector by reference and populates its members
+// using elemens from a second std::vector of passed by constant reference.
+// arguments: an std::vector passed by reference, an std::vector passed by
 // constant reference
 // returns: n/a
-void populateArray(array<double, DAYS> &to, const array<double, SIZE> &from) {
+void populateVecor(vector<double> &to, const vector<double> &from) {
     static int index = 0; //so that index doesn't reset after each function call
     for (int i = 0; i < to.size(); ++i) {
         to.at(i) = from.at(index);
